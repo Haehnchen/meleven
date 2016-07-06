@@ -76,6 +76,8 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
         /** @var \Shopware\Bundle\AttributeBundle\Service\CrudService $crudService */
         $crudService = $this->get('shopware_attribute.crud_service');
         $crudService->update('s_media_attributes', 'meleven_id', 'string');
+        
+        Shopware()->Models()->generateAttributeModels();
 
         return true;
     }
@@ -132,17 +134,18 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
             $config['auth']['channel']
         );
 
+        $modelManager = $this->get('models');
+
         $exporter = new \Shopware\SmMeleven\Exporter\ImageExporter(
             new \GuzzleHttp\Client(),
-            Shopware()->Models()->getRepository('Shopware\CustomModels\MelevenImage'),
-            new \Psr\Log\NullLogger()
+            new \Psr\Log\NullLogger(),
+            $modelManager
+
         );
 
         $finder = new \Shopware\SmMeleven\Exporter\AliasFinder(
             Shopware()->Models()->getRepository('Shopware\CustomModels\MelevenImage')
         );
-
-        $modelManager = $this->get('models');
 
         return new MediaAdapter($exporter, $finder, $config, $modelManager);
     }

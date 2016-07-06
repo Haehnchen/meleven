@@ -7,8 +7,10 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use League\Flysystem\Config;
 use Psr\Log\LoggerInterface;
+use Shopware\Bundle\AttributeBundle\Service\DataPersister;
+use Shopware\Components\Model\ModelManager;
 use Shopware\CustomModels\MelevenImage;
-use Shopware\CustomModels\MelevenImageRepository;
+use Shopware\Models\Media\Media;
 use Shopware\SmMeleven\Exporter\Exception\MediaExportException;
 use Shopware\SmMeleven\Struct\MelevenConfig;
 
@@ -18,22 +20,20 @@ class ImageExporter
      * @var Client
      */
     private $client;
-    
-    /**
-     * @var MelevenImageRepository
-     */
-    private $er;
-    
+
+
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Client $client, MelevenImageRepository $er, LoggerInterface $logger)
+    private $modelManager;
+
+    public function __construct(Client $client, LoggerInterface $logger, ModelManager $modelManager)
     {
         $this->client = $client;
-        $this->er = $er;
         $this->logger = $logger;
+        $this->modelManager = $modelManager;
     }
 
     public function exportMedia(MelevenConfig $meleven, $path, $resource, Config $config)
@@ -52,20 +52,20 @@ class ImageExporter
             throw new MediaExportException(sprintf('Invalid response for "%s"', $path), $e->getCode(), $e);
         }
 
-        $content = json_decode((string) $request->getBody(), true);
-        if(!isset($content[0]['id'])) {
+        $content = json_decode((string)$request->getBody(), true);
+        if (!isset($content[0]['id'])) {
             throw new MediaExportException(sprintf('Invalid response for "%s"', $path));
         }
 
-        $basename = basename($path);
-        
-        if($id = $this->er->findMelevenIdByBasename($basename)) {
-            return sprintf('out/%s/%s', $meleven->getChannel(), $id);
-        }
+        /** @var Media $media */
+        $media = $this->modelManager->getRepository(Media::class)
+            ->findOneBy(['path' => $path]);
 
-        $this->er->createAndClear(
-            new MelevenImage($basename, $path, $content[0]['id'], $content[0])
-        );
+        if ($media) {
+            /** @var DataPersister $persister */
+            $persister = Shopware()->Container()->get('shopware_attribute.data_persister');
+            $persister->persist(['meleven_id' => $content[0]['id']], 's_media_attributes', $media->getId());
+        }
         
         return sprintf('out/%s/%s', $meleven->getChannel(), $content[0]['id']);
     }
