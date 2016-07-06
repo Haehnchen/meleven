@@ -26,7 +26,7 @@ class MelevenMediaHydrator
     public function hydrate(array $data)
     {
         $media = $this->mediaHydrator->hydrate($data);
-exit('FOO');
+
         $media->setFile('');
         $media->setThumbnails([
             new Thumbnail(),
