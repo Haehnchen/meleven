@@ -1,0 +1,15 @@
+{
+  "name": "shopmacher/meleven",
+  "license": "",
+  "description": "Provides meleven support for MediaService",
+  "type": "shopware-frontend-plugin",
+  "require": {
+    "composer/installers": "~1.0"
+  },
+  "authors": [
+    {
+      "name": "Shopmacher eCommerce GmbH & Co. KG",
+      "email": "info@shopmacer.de"
+    }
+  ]
+}
