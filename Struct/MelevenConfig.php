@@ -8,7 +8,7 @@ class MelevenConfig
     /**
      * @var boolean
      */
-    private $enabled;
+    private $enabled = true;
 
     /**
      * @var string
@@ -25,13 +25,17 @@ class MelevenConfig
      */
     private $channel;
 
-    private function __construct(array $config)
+    /**
+     * MelevenConfig constructor.
+     * @param $user
+     * @param $password
+     * @param $channel
+     */
+    public function __construct($user, $password, $channel)
     {
-        foreach ($config as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->{$key} = $value;
-            }
-        }
+        $this->user = $user;
+        $this->password = $password;
+        $this->channel = $channel;
     }
 
     /**
@@ -64,20 +68,5 @@ class MelevenConfig
     public function getChannel()
     {
         return $this->channel;
-    }
-
-    public static function createFormConfigArray(array $config)
-    {
-        // strip "sm_meleven_" in config name
-        $cfg = [];
-        foreach (array_filter($config) as $key => $value) {
-            if (strpos($key, 'sm_meleven_') === 0) {
-                $cfg[substr($key, 11)] = $value;
-            }
-        }
-
-        return new MelevenConfig(array_merge([
-            'enabled' => false,
-        ], $cfg));
     }
 }

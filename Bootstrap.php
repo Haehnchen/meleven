@@ -61,17 +61,30 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
         $this->subscribeEvent(
             'Enlight_Bootstrap_AfterInitResource_shopware_media.strategy_factory',
             'decorateMediaFactory'
-        ); 
+        );
+
+        $this->subscribeEvent(
+            'Enlight_Bootstrap_AfterInitResource_shopware_storefront.media_hydrator_dbal',
+            'decorateMediaHydratorDbal'
+        );
 
         $this->subscribeEvent(
             'Enlight_Controller_Front_DispatchLoopStartup',
             'onStartDispatch'
         );
 
-        $this->createForm();
-        $this->createDatabase();
-
         return true;
+    }
+
+    public function decorateMediaHydratorDbal(\Enlight_Event_EventArgs $args)
+    {
+        $mediaHydrator = Shopware()->Container()->get('shopware_storefront.media_hydrator_dbal');
+
+//        $melevenHydrator = new \Shopware\SmMeleven\Bundle\StoreFrontBundle\MelevenMediaHydrator(
+//            $mediaHydrator
+//        );
+
+        Shopware()->Container()->set('shopware_storefront.media_hydrator_dbal', $mediaHydrator);
     }
 
     public function decorateMediaFactory(\Enlight_Event_EventArgs $args)
@@ -79,10 +92,15 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
         /** @var \Shopware $sw */
         $sw = Shopware();
 
-        $config = MelevenConfig::createFormConfigArray($this->Config()->toArray());
-        if(!$config->isEnabled()) {
-            return;
-        }
+
+        $cdnConfig = Shopware()->Container()->getParameterBag()->get('shopware.cdn');
+
+        $config = $cdnConfig['adapters']['meleven'];
+        $config = new MelevenConfig(
+            $config['auth']['user'],
+            $config['auth']['password'],
+            $config['auth']['channel']
+        );
 
         $core = $sw->Container()->get('shopware_media.strategy_factory');
 
@@ -100,7 +118,13 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
     
     public function createMelevenAdapter(\Enlight_Event_EventArgs $args)
     {
-        $config = MelevenConfig::createFormConfigArray($this->Config()->toArray());
+        $config = $args->getConfig();
+
+        $config = new MelevenConfig(
+            $config['auth']['user'],
+            $config['auth']['password'],
+            $config['auth']['channel']
+        );
 
         $exporter = new \Shopware\SmMeleven\Exporter\ImageExporter(
             new \GuzzleHttp\Client(),
@@ -113,31 +137,6 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
         );
 
         return new MediaAdapter($exporter, $finder, $config);
-    }
-
-    /**
-     * Creates the configuration fields
-     */
-    private function createForm()
-    {
-        $form = $this->Form();
-
-        $form->setElement('checkbox', 'sm_meleven_enabled', [
-            'label' => 'Aktiv',
-        ]);
-
-        $form->setElement('text', 'sm_meleven_user', [
-            'label' => 'Username',
-        ]);
-
-        $form->setElement('text', 'sm_meleven_password', [
-            'label' => 'Password',
-            'inputType' => 'password',
-        ]);
-
-        $form->setElement('text', 'sm_meleven_channel', [
-            'label' => 'Channel',
-        ]);
     }
 
     /**
@@ -167,24 +166,4 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
             $this->Path()
         );
     }
-
-
-    /**
-     * Creates the plugin database table over the doctrine schema tool.
-     */
-    private function createDatabase()
-    {
-        $em = Shopware()->Models();
-
-        $tool = new \Doctrine\ORM\Tools\SchemaTool($em);
-        $classes = [
-            $em->getClassMetadata('Shopware\CustomModels\MelevenImage'),
-        ];
-
-        try {
-            $tool->createSchema($classes);
-        } catch (\Doctrine\ORM\Tools\ToolsException $e) {
-        }
-    }
-
 }

@@ -43,7 +43,10 @@ class ImageExporter
                 'body' => [
                     'image' => $resource,
                 ],
-                'auth' => [$meleven->getUser(), $meleven->getPassword()],
+                'auth' => [
+                    $meleven->getUser(),
+                    $meleven->getPassword()
+                ]
             ]);
         } catch (RequestException $e) {
             throw new MediaExportException(sprintf('Invalid response for "%s"', $path), $e->getCode(), $e);

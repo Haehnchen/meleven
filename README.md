@@ -9,12 +9,23 @@ Shop configuration need to be changes
 ```
 # config.php
     'cdn' => [
-        'backend' => 'meleven',
+        'backend' => 'local',
+        'strategy' => 'md5',
         'adapters' => [
+            'local' => [
+                'type' => 'local',
+                'mediaUrl' => '',
+                'path' => realpath(__DIR__ . '/')
+            ],
             'meleven' => [
                 'type' => 'meleven',
-                'mediaUrl' => '//api.meleven.de/',
                 'strategy' => 'meleven',
+                'mediaUrl' => 'https://api.meleven.de/out/XXXXX/',
+                'auth' => [
+                    'user' => '',
+                    'password' => '',
+                    'channel' => 'XXXXXX'
+                ]
             ]
         ]
     ]
