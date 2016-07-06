@@ -9,10 +9,9 @@ use League\Flysystem\Config;
 use Psr\Log\LoggerInterface;
 use Shopware\Bundle\AttributeBundle\Service\DataPersister;
 use Shopware\Components\Model\ModelManager;
-use Shopware\CustomModels\MelevenImage;
+use Shopware\Models\Media\Media;
 use SmMeleven\Exporter\Exception\MediaExportException;
 use SmMeleven\Struct\MelevenConfig;
-use Shopware\SmMeleven\Struct\MelevenConfig;
 
 class ImageExporter
 {

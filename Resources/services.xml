@@ -15,7 +15,8 @@
         </service>
 
         <service id="sm_meleven.path_encoder" class="SmMeleven\Exporter\PathEncoder">
-            <argument type="service" id="sm_meleven.alias_finder" />
+            <argument type="service" id="models"/>
+            <argument type="service" id="shopware_attribute.data_loader"/>
         </service>
 
         <service id="sm_meleven.strategy_factory"
@@ -32,19 +33,19 @@
             <argument>%shopware.cdn.adapters.meleven.auth.channel%</argument>
         </service>
 
-        <service id="sm_meleven.alias_finder" class="SmMeleven\Exporter\AliasFinder" />
         <service id="sm_meleven.http_client" class="GuzzleHttp\Client" />
         <service id="sm_meleven.logger" class="Psr\Log\NullLogger" />
 
         <service id="sm_meleven.image_exporter" class="SmMeleven\Exporter\ImageExporter">
             <argument type="service" id="sm_meleven.http_client" />
             <argument type="service" id="sm_meleven.logger" />
+            <argument type="service" id="models" />
         </service>
 
         <service id="sm_meleven.media_adapter" class="SmMeleven\Bundle\MediaBundle\MelevenAdapter">
             <argument type="service" id="sm_meleven.image_exporter" />
-            <argument type="service" id="sm_meleven.alias_finder" />
             <argument type="service" id="sm_meleven.config" />
+            <argument type="service" id="models" />
         </service>
 
 

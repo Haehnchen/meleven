@@ -6,7 +6,9 @@ use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
-use SmMeleven\Exporter\AliasFinder;
+use Shopware\Components\Model\ModelManager;
+use Shopware\Models\Media\Media;
+use SmMeleven\Exporter\Exception\MediaExportException;
 use SmMeleven\Exporter\ImageExporter;
 use SmMeleven\Struct\MelevenConfig;
 use SmMeleven\Utils\MelevenUtil;
@@ -28,11 +30,6 @@ class MelevenAdapter extends AbstractAdapter
     private $config;
 
     /**
-     * @var AliasFinder
-     */
-    private $finder;
-
-    /**
      * @var ModelManager
      */
     private $modelManager;
@@ -40,18 +37,15 @@ class MelevenAdapter extends AbstractAdapter
     /**
      * MediaAdapter constructor.
      * @param ImageExporter $imageExporter
-     * @param AliasFinder $finder
      * @param MelevenConfig $config
      * @param ModelManager $modelManager
      */
     public function __construct(
         ImageExporter $imageExporter,
-        AliasFinder $finder,
         MelevenConfig $config,
         ModelManager $modelManager
     ) {
         $this->imageExporter = $imageExporter;
-        $this->finder = $finder;
         $this->config = $config;
         $this->modelManager = $modelManager;
     }
@@ -187,7 +181,8 @@ class MelevenAdapter extends AbstractAdapter
      */
     public function has($path)
     {
-        return strpos($path, 'out') === 0 && $this->finder->hasMelevenId(basename($path));
+        return false;
+        return strpos($path, 'out') === 0;
     }
 
     /**
