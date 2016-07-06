@@ -1,13 +1,13 @@
 <?php
 
-namespace Shopware\SmMeleven\Media;
+namespace SmMeleven\Bundle\MediaBundle;
 
 use Shopware\Bundle\MediaBundle\Strategy\PlainStrategy;
 use Shopware\Bundle\MediaBundle\Strategy\StrategyInterface;
-use Shopware\SmMeleven\Exporter\PathEncoder;
-use Shopware\SmMeleven\Struct\MelevenConfig;
+use SmMeleven\Exporter\PathEncoder;
+use SmMeleven\Struct\MelevenConfig;
 
-class MediaStrategy implements StrategyInterface
+class MelevenStrategy implements StrategyInterface
 {
 
     /**

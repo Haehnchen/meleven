@@ -1,8 +1,8 @@
 <?php
 
-namespace Shopware\SmMeleven\Exporter;
+namespace SmMeleven\Exporter;
 
-use Shopware\SmMeleven\Struct\MelevenConfig;
+use SmMeleven\Struct\MelevenConfig;
 
 class PathEncoder
 {

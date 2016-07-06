@@ -1,6 +1,6 @@
 <?php
 
-namespace Shopware\SmMeleven\Utils;
+namespace SmMeleven\Utils;
 
 class MelevenUtil
 {

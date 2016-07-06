@@ -1,6 +1,6 @@
 <?php
 
-namespace Shopware\SmMeleven\Exception;
+namespace SmMeleven\Exception;
 
 class MediaImportException
 {

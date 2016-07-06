@@ -1,8 +1,8 @@
 <?php
 
-namespace Shopware\SmMeleven\Exporter\Exception;
+namespace SmMeleven\Exporter\Exception;
 
-use Shopware\SmMeleven\Exception\MelevenException;
+use SmMeleven\Exception\MelevenException;
 
 class MediaExportException extends MelevenException
 {

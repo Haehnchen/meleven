@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="sm_meleven.plain_strategy" class="Shopware\Bundle\MediaBundle\Strategy\PlainStrategy" />
+
+        <service id="sm_meleven.media_strategy" class="SmMeleven\Bundle\MediaBundle\MelevenStrategy">
+            <argument type="service" id="sm_meleven.plain_strategy" />
+            <argument type="service" id="sm_meleven.path_encoder" />
+            <argument type="service" id="sm_meleven.config" />
+        </service>
+
+        <service id="sm_meleven.path_encoder" class="SmMeleven\Exporter\PathEncoder">
+            <argument type="service" id="sm_meleven.alias_finder" />
+        </service>
+
+        <service id="sm_meleven.strategy_factory"
+                 class="SmMeleven\Bundle\MediaBundle\StrategyFactory"
+                 decorates="shopware_media.strategy_factory"
+                 public="false">
+            <argument type="service" id="sm_meleven.strategy_factory.inner"/>
+            <argument type="service" id="sm_meleven.media_strategy"/>
+        </service>
+
+        <service id="sm_meleven.config" class="SmMeleven\Struct\MelevenConfig">
+            <argument>%shopware.cdn.adapters.meleven.auth.user%</argument>
+            <argument>%shopware.cdn.adapters.meleven.auth.password%</argument>
+            <argument>%shopware.cdn.adapters.meleven.auth.channel%</argument>
+        </service>
+
+        <service id="sm_meleven.alias_finder" class="SmMeleven\Exporter\AliasFinder" />
+        <service id="sm_meleven.http_client" class="GuzzleHttp\Client" />
+        <service id="sm_meleven.logger" class="Psr\Log\NullLogger" />
+
+        <service id="sm_meleven.image_exporter" class="SmMeleven\Exporter\ImageExporter">
+            <argument type="service" id="sm_meleven.http_client" />
+            <argument type="service" id="sm_meleven.logger" />
+        </service>
+
+        <service id="sm_meleven.media_adapter" class="SmMeleven\Bundle\MediaBundle\MelevenAdapter">
+            <argument type="service" id="sm_meleven.image_exporter" />
+            <argument type="service" id="sm_meleven.alias_finder" />
+            <argument type="service" id="sm_meleven.config" />
+        </service>
+
+
+
+    </services>
+</container>

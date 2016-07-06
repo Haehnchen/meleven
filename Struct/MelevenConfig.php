@@ -1,6 +1,6 @@
 <?php
 
-namespace Shopware\SmMeleven\Struct;
+namespace SmMeleven\Struct;
 
 class MelevenConfig
 {

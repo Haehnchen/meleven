@@ -1,23 +1,20 @@
 <?php
 
-namespace Shopware\SmMeleven\Media;
+namespace SmMeleven\Bundle\MediaBundle;
 
+use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
-use Shopware\Components\Model\ModelManager;
-use Shopware\Models\Media\Media;
-use Shopware\SmMeleven\Exporter\AliasFinder;
-use Shopware\SmMeleven\Exporter\Exception\MediaExportException;
-use Shopware\SmMeleven\Exporter\ImageExporter;
-use Shopware\SmMeleven\Struct\MelevenConfig;
-use Shopware\SmMeleven\Utils\MelevenUtil;
+use SmMeleven\Exporter\AliasFinder;
+use SmMeleven\Exporter\ImageExporter;
+use SmMeleven\Struct\MelevenConfig;
+use SmMeleven\Utils\MelevenUtil;
 
 /**
  * Class MediaAdapter
- * @package Shopware\SmMeleven
  */
-class MediaAdapter implements AdapterInterface
+class MelevenAdapter extends AbstractAdapter
 {
 
     /**

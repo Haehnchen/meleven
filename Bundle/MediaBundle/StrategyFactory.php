@@ -1,6 +1,6 @@
 <?php
 
-namespace Shopware\SmMeleven\Media;
+namespace SmMeleven\Bundle\MediaBundle;
 
 use Shopware\Bundle\MediaBundle\Strategy\StrategyFactory as BaseStrategyFactory;
 
@@ -12,11 +12,11 @@ class StrategyFactory extends BaseStrategyFactory
     private $factory;
     
     /**
-     * @var MediaStrategy
+     * @var MelevenStrategy
      */
     private $strategy;
 
-    public function __construct(BaseStrategyFactory $factory, MediaStrategy $strategy)
+    public function __construct(BaseStrategyFactory $factory, MelevenStrategy $strategy)
     {
         $this->factory = $factory;
         $this->strategy = $strategy;

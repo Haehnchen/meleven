@@ -1,6 +1,6 @@
 <?php
 
-namespace Shopware\SmMeleven\Exporter;
+namespace SmMeleven\Exporter;
 
 class PathBuilder
 {

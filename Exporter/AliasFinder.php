@@ -1,16 +1,9 @@
 <?php
 
-namespace Shopware\SmMeleven\Exporter;
-
-use Shopware\CustomModels\MelevenImageRepository;
+namespace SmMeleven\Exporter;
 
 class AliasFinder
 {
-    /**
-     * @var MelevenImageRepository
-     */
-    private $repository;
-
     /**
      * @var array<string, string>
      */
@@ -21,26 +14,12 @@ class AliasFinder
      */
     private $cacheIds = [];
 
-    public function __construct(MelevenImageRepository $repository)
-    {
-        $this->repository = $repository;
-    }
-
     public function findAliasForBasename($basename)
     {
         if(isset($this->cache[$basename]) || array_key_exists($basename, $this->cache)) {
             return $this->cache[$basename];
         }
 
-        if($name = $this->repository->findMelevenIdByBasename($basename)) {
-            // prevent memory leaks
-            if(count($this->cache) > 100) {
-                $this->cache = array_slice($this->cache, 50);
-            }
-
-            return $this->cache[$basename] = $name;
-        }
-        
         return null;        
     }
 
@@ -59,6 +38,6 @@ class AliasFinder
             $this->cacheIds = array_slice($this->cacheIds, 50);
         }
 
-        return $this->cacheIds[$melevenId] = $this->repository->hasMelevenId($melevenId);
+        return $this->cacheIds[$melevenId] = null;
     }
 }

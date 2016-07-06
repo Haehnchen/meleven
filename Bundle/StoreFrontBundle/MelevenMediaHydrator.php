@@ -1,11 +1,11 @@
 <?php
 
-namespace Shopware\SmMeleven\Bundle\StoreFrontBundle;
+namespace SmMeleven\Bundle\StoreFrontBundle;
 
 use Shopware\Bundle\StoreFrontBundle\Gateway\DBAL\Hydrator\MediaHydrator;
 use Shopware\Bundle\StoreFrontBundle\Struct\Thumbnail;
 
-class MelevenMediaHydrator
+class MelevenMediaHydrator extends MediaHydrator
 {
     /** @var  MediaHydrator */
     private $mediaHydrator;
