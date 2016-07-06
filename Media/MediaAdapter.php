@@ -5,6 +5,8 @@ namespace Shopware\SmMeleven\Media;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
+use Shopware\Components\Model\ModelManager;
+use Shopware\Models\Media\Media;
 use Shopware\SmMeleven\Exporter\AliasFinder;
 use Shopware\SmMeleven\Exporter\Exception\MediaExportException;
 use Shopware\SmMeleven\Exporter\ImageExporter;
@@ -33,14 +35,28 @@ class MediaAdapter implements AdapterInterface
      */
     private $finder;
 
+    /**
+     * @var ModelManager
+     */
+    private $modelManager;
+
+    /**
+     * MediaAdapter constructor.
+     * @param ImageExporter $imageExporter
+     * @param AliasFinder $finder
+     * @param MelevenConfig $config
+     * @param ModelManager $modelManager
+     */
     public function __construct(
         ImageExporter $imageExporter,
         AliasFinder $finder,
-        MelevenConfig $config
+        MelevenConfig $config,
+        ModelManager $modelManager
     ) {
         $this->imageExporter = $imageExporter;
         $this->finder = $finder;
         $this->config = $config;
+        $this->modelManager = $modelManager;
     }
 
     /**
@@ -83,14 +99,24 @@ class MediaAdapter implements AdapterInterface
         }
 
         try {
-            $path = $this->imageExporter->exportMedia($this->config, MelevenUtil::normalizePath($path), $resource,
-                $config);
+            $melevenPath = $this->imageExporter->exportMedia(
+                $this->config, MelevenUtil::normalizePath($path), $resource, $config
+            );
+
+            /** @var Media $media */
+            $media = $this->modelManager->getRepository(Media::class)
+                ->findOneBy(['path' => $path]);
+
+            if (null !== $media) {
+                $media->setAttribute(['meleven_id' => $melevenPath]);
+                $this->modelManager->flush($media);
+            }
         } catch (MediaExportException $e) {
             return false;
         }
 
         return [
-            'path' => $path,
+            'path' => $melevenPath,
             'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
         ];
     }

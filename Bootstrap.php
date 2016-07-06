@@ -73,6 +73,10 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
             'onStartDispatch'
         );
 
+        /** @var \Shopware\Bundle\AttributeBundle\Service\CrudService $crudService */
+        $crudService = $this->get('shopware_attribute.crud_service');
+        $crudService->update('s_media_attributes', 'meleven_id', 'string');
+
         return true;
     }
 
@@ -89,6 +93,8 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
 
     public function decorateMediaFactory(\Enlight_Event_EventArgs $args)
     {
+        return;
+        
         /** @var \Shopware $sw */
         $sw = Shopware();
 
@@ -136,7 +142,9 @@ class Shopware_Plugins_Frontend_SmMeleven_Bootstrap extends Shopware_Components_
             Shopware()->Models()->getRepository('Shopware\CustomModels\MelevenImage')
         );
 
-        return new MediaAdapter($exporter, $finder, $config);
+        $modelManager = $this->get('models');
+
+        return new MediaAdapter($exporter, $finder, $config, $modelManager);
     }
 
     /**
