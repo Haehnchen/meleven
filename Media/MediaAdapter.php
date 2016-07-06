@@ -11,14 +11,18 @@ use Shopware\SmMeleven\Exporter\ImageExporter;
 use Shopware\SmMeleven\Struct\MelevenConfig;
 use Shopware\SmMeleven\Utils\MelevenUtil;
 
+/**
+ * Class MediaAdapter
+ * @package Shopware\SmMeleven
+ */
 class MediaAdapter implements AdapterInterface
 {
 
     /**
-     * @var ImageExporterww
+     * @var ImageExporter
      */
     private $imageExporter;
-    
+
     /**
      * @var MelevenConfig
      */
@@ -33,8 +37,7 @@ class MediaAdapter implements AdapterInterface
         ImageExporter $imageExporter,
         AliasFinder $finder,
         MelevenConfig $config
-    )
-    {
+    ) {
         $this->imageExporter = $imageExporter;
         $this->finder = $finder;
         $this->config = $config;
@@ -72,7 +75,7 @@ class MediaAdapter implements AdapterInterface
     public function writeStream($path, $resource, Config $config)
     {
         // already external file
-        if(MelevenUtil::isDerivativesPath($path)) {
+        if (MelevenUtil::isDerivativesPath($path)) {
             return [
                 'path' => $path,
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
@@ -80,7 +83,8 @@ class MediaAdapter implements AdapterInterface
         }
 
         try {
-            $path = $this->imageExporter->exportMedia($this->config, MelevenUtil::normalizePath($path), $resource, $config);
+            $path = $this->imageExporter->exportMedia($this->config, MelevenUtil::normalizePath($path), $resource,
+                $config);
         } catch (MediaExportException $e) {
             return false;
         }
