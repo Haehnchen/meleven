@@ -48,6 +48,18 @@
             <argument type="service" id="models" />
         </service>
 
+        <service id="sm_meleven.thumbnail_service" class="SmMeleven\Bundle\StoreFrontBundle\Service\ThumbnailService">
+
+        </service>
+
+        <service id="sm_meleven.list_product_service"
+                 class="SmMeleven\Bundle\StoreFrontBundle\Service\ListProductService"
+                 decorates="shopware_storefront.list_product_service"
+                 public="false">
+            <argument type="service" id="sm_meleven.list_product_service.inner" />
+            <argument type="service" id="sm_meleven.thumbnail_service" />
+        </service>
+
 
 
     </services>
